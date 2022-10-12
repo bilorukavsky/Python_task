@@ -96,3 +96,13 @@ def countDigitOne(n):
   return sum
 
 countDigitOne(13)
+
+
+#5
+def countDigitOne(n):
+  sum = 0
+  for i in range(1,n+1):
+    nstr = str(i)
+    sum += nstr.count("1")
+  return sum
+countDigitOne(13) 

@@ -2,6 +2,7 @@
 # https://peps.python.org/pep-0008/#should-a-line-break-before-or-after-a-binary-operator
 
 # 1
+# https://www.hackerrank.com/challenges/merge-the-tools/problem?isFullScreen=true
 def merge_the_tools(string, k):
     length = len(string)
     len_k = int(length / k)
@@ -22,15 +23,26 @@ merge_the_tools(string, k)
 
 
 # 2
+# Median of Two Sorted Arrays
+# https://leetcode.com/problems/median-of-two-sorted-arrays/
 def find_median_sorted_arrays(nums1, nums2):
-    nums1.extend(nums2)
-    nums1.sort()
-    l = len(nums1)
-    if l % 2 == 0:
-        median = (nums1[l//2 - 1] + nums1[l//2]) / 2
-    else:
-        median = nums1[l//2]
-    return median    
+      union_array = nums1 + nums2
+      union_array.sort()
+      l = len(union_array)
+      if l % 2 == 0:
+          return (union_array[l//2-1] + union_array[l//2]) / 2
+      return union_array[l//2]
+
+# Or 
+def _find_median_sorted_arrays(nums1, nums2):
+    union_array = nums1 + nums2
+    union_array.sort()
+    l = len(union_array)
+    match l % 2: 
+        case 0:
+            return (union_array[l//2-1] + union_array[l//2]) / 2
+        case _:
+          return union_array[l//2]  
 
 
 nums1 = [1, 4, 8]
@@ -39,26 +51,32 @@ find_median_sorted_arrays(nums1, nums2)
 
 
 # 3
+# Reverse Integer
+# https://leetcode.com/problems/reverse-integer/
 def reverse(x):
     tmp = abs(x)
     y = tmp % 10  
     tmp //= 10
+
     while tmp > 0:
         y *= 10
         y = y + (tmp % 10)
         tmp //= 10
+
     if x < 0:
         y =- y
+
     if y >= -2**31 and y <= 2**31 - 1:   
         return y
-    else:
-        return 0
+    return 0
 
 
 print(reverse(100))
 
 
 # 4
+# Container With Most Water
+# https://leetcode.com/problems/container-with-most-water/
 def max_area(height):
     length = len(height)
     max_s = 0
@@ -79,6 +97,8 @@ max_area(height)
 
 
 # 5
+# Number of Digit One
+# https://leetcode.com/problems/number-of-digit-one/
 def count_digit_one(n):
     sum = 0
     for i in range(1, n+1):

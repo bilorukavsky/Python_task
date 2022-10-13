@@ -17,11 +17,6 @@ def merge_the_tools(string, k):
     return
 
 
-string = "ZXCZZXCXXABCCCC"
-k = 3
-merge_the_tools(string, k)
-
-
 # 2
 # Median of Two Sorted Arrays
 # https://leetcode.com/problems/median-of-two-sorted-arrays/
@@ -45,11 +40,6 @@ def _find_median_sorted_arrays(nums1, nums2):
           return union_array[l//2]  
 
 
-nums1 = [1, 4, 8]
-nums2 = [2, 3]
-find_median_sorted_arrays(nums1, nums2)
-
-
 # 3
 # Reverse Integer
 # https://leetcode.com/problems/reverse-integer/
@@ -71,9 +61,6 @@ def reverse(x):
     return 0
 
 
-print(reverse(100))
-
-
 # 4
 # Container With Most Water
 # https://leetcode.com/problems/container-with-most-water/
@@ -92,10 +79,6 @@ def max_area(height):
     return max_s
 
 
-height = [5, 1, 5, 6]
-max_area(height)
-
-
 # 5
 # Number of Digit One
 # https://leetcode.com/problems/number-of-digit-one/
@@ -108,6 +91,3 @@ def count_digit_one(n):
                 sum += 1
             tmp //= 10
     return sum
-
-
-count_digit_one(13)

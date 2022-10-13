@@ -4,9 +4,9 @@
 # 1
 def merge_the_tools(string, k):
     length = len(string)
-    lenk = int(length / k)
+    len_k = int(length / k)
     i = 1
-    while i != lenk + 1:
+    while i != len_k + 1:
         res = str()
         substring = string[(i-1)*k : k*i]
         for j in substring:
@@ -22,7 +22,7 @@ merge_the_tools(string, k)
 
 
 # 2
-def findMedianSortedArrays(nums1, nums2):
+def find_median_sorted_arrays(nums1, nums2):
     nums1.extend(nums2)
     nums1.sort()
     l = len(nums1)
@@ -35,7 +35,7 @@ def findMedianSortedArrays(nums1, nums2):
 
 nums1 = [1, 4, 8]
 nums2 = [2, 3]
-findMedianSortedArrays(nums1, nums2)
+find_median_sorted_arrays(nums1, nums2)
 
 
 # 3
@@ -59,9 +59,9 @@ print(reverse(100))
 
 
 # 4
-def maxArea(height):
+def max_area(height):
     length = len(height)
-    maxS = 0
+    max_s = 0
     for i in range(1, length):
         tmp1 = height[i-1]
         for j in range(i+1, length+1):
@@ -69,17 +69,17 @@ def maxArea(height):
             y = min(tmp1, tmp2)
             x = j - i
             S = x * y
-            if maxS < S:
-                maxS = S
-    return maxS
+            if max_s < S:
+                max_s = S
+    return max_s
 
 
 height = [5, 1, 5, 6]
-maxArea(height)
+max_area(height)
 
 
 # 5
-def countDigitOne(n):
+def count_digit_one(n):
     sum = 0
     for i in range(1, n+1):
         tmp = i
@@ -90,4 +90,4 @@ def countDigitOne(n):
     return sum
 
 
-countDigitOne(13)
+count_digit_one(13)

@@ -1,7 +1,8 @@
-from task1 import find_median_sorted_arrays
-from task1 import reverse
-from task1 import max_area
-from task1 import count_digit_one
+from assignment_1.task_1 import find_median_sorted_arrays
+from assignment_1.task_1 import reverse
+from assignment_1.task_1 import max_area
+from assignment_1.task_1 import count_digit_one
+
 
 def test_find_median_sorted_arrays():
     nums1 = [1, 3]

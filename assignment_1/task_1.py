@@ -29,7 +29,7 @@ def find_median_sorted_arrays(nums1, nums2):
     return union_array[l // 2]
 
 
-# Or 
+# Or
 def _find_median_sorted_arrays(nums1, nums2):
     union_array = nums1 + nums2
     union_array.sort()

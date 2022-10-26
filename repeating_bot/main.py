@@ -1,4 +1,5 @@
 import logging
+import os
 
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
@@ -23,7 +24,7 @@ def echo(update: Update, context: CallbackContext) -> None:
 
 
 def main() -> None:
-    updater = Updater("5747046026:AAGM7th3xenuuya2QZO-wD8adYu9FuzDEcY")
+    updater = Updater(os.environ["TOKEN"])
 
     dispatcher = updater.dispatcher
 

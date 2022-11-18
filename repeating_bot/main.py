@@ -50,6 +50,7 @@ def photo(update: Update, context: CallbackContext) -> None:
     logger.info("Photo of %s: %s", user.first_name, 'user_photo.jpg')
     update.message.reply_text('Photo added')
 
+    
 def quote() -> dict:
     with requests.get('https://zenquotes.io/api/random') as r:
         if r.status_code == 200:

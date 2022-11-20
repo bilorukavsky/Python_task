@@ -2,7 +2,7 @@ import logging
 import os
 import requests
 
-from telegram import Update, ForceReply, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     Updater,
     CommandHandler,
@@ -10,7 +10,6 @@ from telegram.ext import (
     Filters,
     CallbackContext,
     CallbackQueryHandler,
-    ContextTypes
 )
 
 
@@ -21,10 +20,19 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+def _get_unix_timestamp() -> int:
+    """Returns unix timestamp."""
+
+    import time 
+    from datetime import datetime 
+
+    return int(time.mktime(datetime.now().timetuple()))
+
+
 def start(update: Update, context: CallbackContext) -> None:
     keyboard = [
         [InlineKeyboardButton(text = "Add a photo", callback_data='1')],
-        [InlineKeyboardButton(text = "GitHub", url = 'https://github.com/bilorukavsky/python_task')],
+        [InlineKeyboardButton(text = "GitHub", url='https://github.com/bilorukavsky/python_task')],
         [InlineKeyboardButton(text = "Quote", callback_data='2')]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -45,7 +53,7 @@ def photo(update: Update, context: CallbackContext) -> None:
     user = update.message.from_user
 
     photo_file = update.message.photo[-1].get_file()
-    photo_file.download(f'photos/{user.full_name}.jpg')
+    photo_file.download(f'photos/{user.id}_{_get_unix_timestamp()}.jpg')
 
     logger.info("Photo of %s: %s", user.first_name, 'user_photo.jpg')
     update.message.reply_text('Photo added')
@@ -54,7 +62,6 @@ def photo(update: Update, context: CallbackContext) -> None:
 def quote() -> dict:
     with requests.get('https://zenquotes.io/api/random') as r:
         if r.status_code == 200:
-            content = r.content
             response = r.json()
             return response
         else:
@@ -64,17 +71,17 @@ def quote() -> dict:
 def button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     
-    if (query.data== '1'):
+    if query.data == '1':
         query.edit_message_text("Upload a photo:")
         
-    elif(query.data == '2'):
+    elif query.data == '2':
         response = quote()
         query.edit_message_text(f"Quote: {response[0]['q']}")
         query.message.reply_text(f"Author: {response[0]['a']}")
         
     query.answer()
 
-    
+
 def main() -> None:
     updater = Updater(os.environ["TOKEN"])
 

@@ -2,7 +2,15 @@ import logging
 import os
 import requests
 
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import (
+    Update,
+    ForceReply,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    ReplyKeyboardRemove,
+    ReplyKeyboardMarkup
+)
+
 from telegram.ext import (
     Updater,
     CommandHandler,
@@ -10,8 +18,11 @@ from telegram.ext import (
     Filters,
     CallbackContext,
     CallbackQueryHandler,
+    ConversationHandler,
+    ContextTypes
 )
 
+from pprint import pprint
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
@@ -30,15 +41,24 @@ def _get_unix_timestamp() -> int:
 
 
 def start(update: Update, context: CallbackContext) -> None:
-    keyboard = [
-        [InlineKeyboardButton(text = "Add a photo", callback_data='1')],
-        [InlineKeyboardButton(text = "GitHub", url='https://github.com/bilorukavsky/python_task')],
-        [InlineKeyboardButton(text = "Quote", callback_data='2')]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    
+    #keyboard = [
+    #    [InlineKeyboardButton(text = "Add a photo", callback_data='1')],
+    #    [InlineKeyboardButton(text = "GitHub", url = 'https://github.com/bilorukavsky/python_task')],
+    #    [InlineKeyboardButton(text = "Quote", callback_data='2')]
+    #]
+    #reply_markup = InlineKeyboardMarkup(keyboard)
+
     update.message.reply_text('Hi!')
-    update.message.reply_text('Please choose:', reply_markup=reply_markup)
+    update.message.reply_text('Please choose:', reply_markup=markup())
+
+
+def markup() -> list:
+    keyboard = [
+        [InlineKeyboardButton(text="Add a photo", callback_data='1')],
+        [InlineKeyboardButton(text="GitHub", url='https://github.com/bilorukavsky/python_task')],
+        [InlineKeyboardButton(text="Quote", callback_data='2')]
+    ]
+    return InlineKeyboardMarkup(keyboard)
 
 
 def help_command(update: Update, context: CallbackContext) -> None:
@@ -69,17 +89,22 @@ def quote() -> dict:
            
         
 def button(update: Update, context: CallbackContext) -> None:
+    pprint(update.to_dict())
     query = update.callback_query
-    
+    pprint(update.to_dict())
     if query.data == '1':
         query.edit_message_text("Upload a photo:")
-        
+
     elif query.data == '2':
         response = quote()
         query.edit_message_text(f"Quote: {response[0]['q']}")
         query.message.reply_text(f"Author: {response[0]['a']}")
-        
+
+    pprint(update.to_dict())
     query.answer()
+    pprint(update.to_dict())
+    update.message.reply_text('Please choose:', reply_markup=markup())
+    pprint(update.to_dict())
 
 
 def main() -> None:

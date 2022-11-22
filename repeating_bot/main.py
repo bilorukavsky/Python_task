@@ -75,7 +75,7 @@ def photo(update: Update, context: CallbackContext) -> None:
     photo_file = update.message.photo[-1].get_file()
     photo_file.download(f'photos/{user.id}_{_get_unix_timestamp()}.jpg')
 
-    logger.info(f"{user.first_name} {user.last_name} @{user.username} {user.id} uploaded photo")
+    logger.info("Photo of %s: %s", user.first_name, 'user_photo.jpg')
     update.message.reply_text('Photo added')
     update.message.reply_text('Please choose:', reply_markup=markup())
 
@@ -93,14 +93,14 @@ def button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     
     if query.data == '1':
-        message = query.edit_message_text("Upload a photo:")
+        query.edit_message_text("Upload a photo:")
 
     elif query.data == '2':
         response = quote()
         query.edit_message_text(f"Quote: {response[0]['q']}")
-        message = query.message.reply_text(f"Author: {response[0]['a']}")
-        context.bot.send_message(message.chat_id, 'Please choose:', reply_markup=markup())
-    
+        query.message.reply_text(f"Author: {response[0]['a']}")
+        query.message.reply_text('Please choose:', reply_markup=markup())
+
     query.answer()
 
 

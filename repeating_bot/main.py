@@ -2,7 +2,13 @@ import logging
 import os
 import requests
 
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import (
+    Update,
+    ForceReply,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+)
+
 from telegram.ext import (
     Updater,
     CommandHandler,
@@ -10,6 +16,8 @@ from telegram.ext import (
     Filters,
     CallbackContext,
     CallbackQueryHandler,
+    ConversationHandler,
+    ContextTypes
 )
 
 
@@ -30,15 +38,19 @@ def _get_unix_timestamp() -> int:
 
 
 def start(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text("Hi, I'm your helper bot")
+    update.message.reply_text('Please choose:', reply_markup=markup())
+
+
+def markup() -> InlineKeyboardMarkup:
     keyboard = [
-        [InlineKeyboardButton(text = "Add a photo", callback_data='1')],
-        [InlineKeyboardButton(text = "GitHub", url='https://github.com/bilorukavsky/python_task')],
-        [InlineKeyboardButton(text = "Quote", callback_data='2')]
+        [
+         InlineKeyboardButton(text="GitHub", url='https://github.com/bilorukavsky/python_task'),
+         InlineKeyboardButton(text="Quote", callback_data='2'),
+        ],
+        [InlineKeyboardButton(text="Add a photo", callback_data='1')],
     ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    
-    update.message.reply_text('Hi!')
-    update.message.reply_text('Please choose:', reply_markup=reply_markup)
+    return InlineKeyboardMarkup(keyboard)
 
 
 def help_command(update: Update, context: CallbackContext) -> None:
@@ -57,6 +69,8 @@ def photo(update: Update, context: CallbackContext) -> None:
 
     logger.info("Photo of %s: %s", user.first_name, 'user_photo.jpg')
     update.message.reply_text('Photo added')
+    
+    update.message.reply_text('Please choose:', reply_markup=markup())
 
     
 def quote() -> dict:
@@ -70,15 +84,16 @@ def quote() -> dict:
         
 def button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
-    
+
     if query.data == '1':
-        query.edit_message_text("Upload a photo:")
-        
+        message = query.edit_message_text("Upload a photo:")
+
     elif query.data == '2':
         response = quote()
         query.edit_message_text(f"Quote: {response[0]['q']}")
-        query.message.reply_text(f"Author: {response[0]['a']}")
+        message = query.message.reply_text(f"Author: {response[0]['a']}")
         
+        query.message.reply_text('Please choose:', reply_markup=markup())
     query.answer()
 
 
@@ -93,7 +108,7 @@ def main() -> None:
     dispatcher.add_handler(CallbackQueryHandler(button))
 
     dispatcher.add_handler(MessageHandler(Filters.photo, photo))
-    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
+    dispatcher.add_handler(MessageHandler(Filters.all & ~Filters.command, echo))
 
     updater.start_polling()
     updater.idle()

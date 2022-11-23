@@ -4,15 +4,15 @@
 
 1. Instal pipenv library for setuping virtual environment
 
-'''bash
+```bash
 pip install pipenv
-'''
+```
 2. Clone repo
 
 3. Go to repo directory
 
 ## Bot is ready to run
 
-'''bush
+```bush
 pipenv run bot
-'''
+```

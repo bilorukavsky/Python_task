@@ -4,7 +4,6 @@ import requests
 
 from telegram import (
     Update,
-    ForceReply,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
 )
@@ -14,13 +13,9 @@ from telegram.ext import (
     CommandHandler,
     MessageHandler,
     Filters,
-    CallbackContext,
     CallbackQueryHandler,
-    ConversationHandler,
-    ContextTypes
 )
 
-from pprint import pprint
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
@@ -38,7 +33,7 @@ def _get_unix_timestamp() -> int:
     return int(time.mktime(datetime.now().timetuple()))
 
 
-def start(update: Update, context: CallbackContext) -> None:
+def start(update: Update) -> None:
     update.message.reply_text("Hi, I'm your helper bot")
     update.message.reply_text('Please choose:', reply_markup=markup())
 
@@ -54,15 +49,15 @@ def markup() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(keyboard)
 
 
-def help_command(update: Update, context: CallbackContext) -> None:
+def help_command(update: Update) -> None:
     update.message.reply_text('Help!')
 
 
-def echo(update: Update, context: CallbackContext) -> None:
+def echo(update: Update) -> None:
     update.message.reply_text("I'm your helper bot")
 
 
-def photo(update: Update, context: CallbackContext) -> None:
+def photo(update: Update) -> None:
     user = update.message.from_user
 
     photo_file = update.message.photo[-1].get_file()
@@ -70,7 +65,6 @@ def photo(update: Update, context: CallbackContext) -> None:
 
     logger.info("Photo of %s: %s", user.first_name, 'user_photo.jpg')
     update.message.reply_text('Photo added')
-    update.message.reply_text('Please choose:', reply_markup=markup())
 
     update.message.reply_text('Please choose:', reply_markup=markup())
 
@@ -78,28 +72,24 @@ def photo(update: Update, context: CallbackContext) -> None:
 def quote() -> dict:
     with requests.get('https://zenquotes.io/api/random') as r:
         if r.status_code == 200:
-            content = r.content
             response = r.json()
             return response
         else:
             r.raise_for_status()
 
 
-def button(update: Update, context: CallbackContext) -> None:
+def button(update: Update) -> None:
     query = update.callback_query
 
     if query.data == '1':
-
-        message = query.edit_message_text("Upload a photo:")
-
+        query.edit_message_text("Upload a photo:")
 
     elif query.data == '2':
         response = quote()
         query.edit_message_text(f"Quote: {response[0]['q']}")
-        message = query.message.reply_text(f"Author: {response[0]['a']}")
+        query.message.reply_text(f"Author: {response[0]['a']}")
 
         query.message.reply_text('Please choose:', reply_markup=markup())
-
     query.answer()
 
 
@@ -110,7 +100,6 @@ def main() -> None:
 
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("help", help_command))
-    dispatcher.add_handler(CommandHandler("quote", quote))
 
     dispatcher.add_handler(CallbackQueryHandler(button))
 

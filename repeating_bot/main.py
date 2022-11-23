@@ -20,6 +20,7 @@ from telegram.ext import (
     ContextTypes
 )
 
+from pprint import pprint
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
@@ -69,6 +70,7 @@ def photo(update: Update, context: CallbackContext) -> None:
 
     logger.info("Photo of %s: %s", user.first_name, 'user_photo.jpg')
     update.message.reply_text('Photo added')
+    update.message.reply_text('Please choose:', reply_markup=markup())
 
     update.message.reply_text('Please choose:', reply_markup=markup())
 
@@ -87,7 +89,9 @@ def button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
 
     if query.data == '1':
+
         message = query.edit_message_text("Upload a photo:")
+
 
     elif query.data == '2':
         response = quote()
@@ -95,6 +99,7 @@ def button(update: Update, context: CallbackContext) -> None:
         message = query.message.reply_text(f"Author: {response[0]['a']}")
 
         query.message.reply_text('Please choose:', reply_markup=markup())
+
     query.answer()
 
 

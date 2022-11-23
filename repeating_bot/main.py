@@ -31,8 +31,8 @@ logger = logging.getLogger(__name__)
 def _get_unix_timestamp() -> int:
     """Returns unix timestamp."""
 
-    import time 
-    from datetime import datetime 
+    import time
+    from datetime import datetime
 
     return int(time.mktime(datetime.now().timetuple()))
 
@@ -58,9 +58,9 @@ def help_command(update: Update, context: CallbackContext) -> None:
 
 
 def echo(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(update.message.text)
+    update.message.reply_text("I'm your helper bot")
 
-    
+
 def photo(update: Update, context: CallbackContext) -> None:
     user = update.message.from_user
 
@@ -69,19 +69,20 @@ def photo(update: Update, context: CallbackContext) -> None:
 
     logger.info("Photo of %s: %s", user.first_name, 'user_photo.jpg')
     update.message.reply_text('Photo added')
-    
+
     update.message.reply_text('Please choose:', reply_markup=markup())
 
-    
+
 def quote() -> dict:
     with requests.get('https://zenquotes.io/api/random') as r:
         if r.status_code == 200:
+            content = r.content
             response = r.json()
             return response
         else:
             r.raise_for_status()
-           
-        
+
+
 def button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
 
@@ -92,7 +93,7 @@ def button(update: Update, context: CallbackContext) -> None:
         response = quote()
         query.edit_message_text(f"Quote: {response[0]['q']}")
         message = query.message.reply_text(f"Author: {response[0]['a']}")
-        
+
         query.message.reply_text('Please choose:', reply_markup=markup())
     query.answer()
 
@@ -104,6 +105,7 @@ def main() -> None:
 
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("help", help_command))
+    dispatcher.add_handler(CommandHandler("quote", quote))
 
     dispatcher.add_handler(CallbackQueryHandler(button))
 
